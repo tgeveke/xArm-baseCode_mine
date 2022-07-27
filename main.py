@@ -38,3 +38,16 @@ arm.set_state(0)
 
 # Arm setup complete
 
+arm.move_gohome(speed=100, wait=True)
+arm.set_gripper_enable(True)
+arm.set_gripper_position(850)
+printerPos = {"x": 50.2, "y": 352.6, "z": 50, "rZ": 90} # relative to base
+
+targetPosInFrame = {"x": 150, "y": 0, "z": 50, "rX": 180, "rZ": 90}
+
+goToPos = transformer.appendCoords(printerPos, targetPosInFrame)
+
+print(goToPos)
+arm.set_position(200, 0, 300, 180, 0, 0, speed=100, wait=True)
+
+arm.set_pose(goToPos, speed=100, wait=True)
