@@ -38,3 +38,5 @@ arm.set_state(0)
 
 # Arm setup complete
 
+print("something")
+
