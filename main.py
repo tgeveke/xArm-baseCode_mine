@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Arm startup code
 # Don't touch this!
+"""
 import sys
 import math
 import time
@@ -12,6 +13,8 @@ import requests
 import transformer
 import keyboard
 from upgradedArm import upgradedArm
+"""
+import tempFinder
 """
 try:
     from xarm.tools import utils
@@ -38,6 +41,7 @@ arm.set_state(0)
 
 # Arm setup complete
 
-print("something")
 """
-print("change1")
+print(tempFinder.temperatureFinder(676, adcBits = 12, adcMaxVoltage = 10))
+
+
