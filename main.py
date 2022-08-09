@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Arm startup code
 # Don't touch this!
-"""
+
 import sys
 import math
 import time
@@ -9,13 +9,14 @@ import datetime
 import random
 import traceback
 import threading
+
+#import Robot as Robot
 import requests
 import transformer
-import keyboard
+#import keyboard
 from upgradedArm import upgradedArm
-"""
 import tempFinder
-"""
+
 try:
     from xarm.tools import utils
 except:
@@ -41,7 +42,17 @@ arm.set_state(0)
 
 # Arm setup complete
 
-"""
-print(tempFinder.temperatureFinder(676, adcBits = 12, adcMaxVoltage = 10))
+#arm = XArmAPI(ip)
+arm.motion_enable(enable=True)
+
+
+arm.reset(wait=True)
+
+arm.run_gcode_file("G8 F50 Q0 T50")
+
+arm.reset(wait=True)
+arm.disconnect()
+
+#print(tempFinder.temperatureFinder(676, adcBits = 12, adcMaxVoltage = 10))
 
 
