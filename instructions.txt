@@ -1,0 +1,6 @@
+reset
+view front printer
+wait
+view top printer
+wait
+# go home

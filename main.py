@@ -10,35 +10,42 @@ import traceback
 import threading
 import requests
 import transformer
-import keyboard
 from upgradedArm import upgradedArm
-import motion_tracking
+from motion_tracking import Motion_tracking
+import sys, time, traceback, transformer
+from upgradedArm import upgradedArm
 
-# try:
-#     from xarm.tools import utils
-# except:
-#     pass
-# from xarm import version
-# from xarm.wrapper import XArmAPI
-#
-# def pprint(*args, **kwargs):
-#     try:
-#         stack_tuple = traceback.extract_stack(limit=2)[0]
-#         print('[{}][{}] {}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), stack_tuple[1], ' '.join(map(str, args))))
-#     except:
-#         print(*args, **kwargs)
-#
-# pprint('xArm-Python-SDK Version:{}'.format(version.__version__))
-#
-# arm = upgradedArm('192.168.1.207', baud_checkset=False)
-# arm.clean_warn()
-# arm.clean_error()
-# arm.motion_enable(True)
-# arm.set_mode(0)
-# arm.set_state(0)
+try:
+    from xarm.tools import utils
+except:
+    pass
+from xarm import version
+from xarm.wrapper import XArmAPI
+
+def pprint(*args, **kwargs):
+    try:
+        stack_tuple = traceback.extract_stack(limit=2)[0]
+        print('[{}][{}] {}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), stack_tuple[1], ' '.join(map(str, args))))
+    except:
+        print(*args, **kwargs)
+pprint('xArm-Python-SDK Version:{}'.format(version.__version__))
+
+arm = upgradedArm('192.168.1.207', baud_checkset = False)
+arm.clean_warn()
+arm.clean_error()
+arm.motion_enable(True)
+arm.set_mode(0)
+arm.set_state(0)
 
 # Arm setup complete
-distance  = motion_tracking.some_func()
+try:
+    trackingObject = Motion_tracking()
+    print('Success creating tracking object')
+except:
+    print('Error opening tracking object')
+    sys.exit()
+
+distance = trackingObject.getDistance()
 print(distance)
 
 arm.move_gohome(speed=100, wait=True)
