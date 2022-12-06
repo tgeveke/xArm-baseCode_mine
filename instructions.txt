@@ -1,6 +1,4 @@
 reset
-view front printer
-wait
-view top printer
-wait
-# go home
+go home
+#scan
+#go home

@@ -8,6 +8,7 @@ arm = XArmAPI(ip)
 global_speed = 125
 plane = 'top'
 
+
 def grab():
     arm.set_gripper_enable(True)
     arm.set_gripper_position(800, wait=False)
@@ -53,7 +54,7 @@ def move2target():
             arm.set_position(x=distance, speed=50, relative=True, wait=True)
         elif plane == 'top':
             [x_i, y_i, z_i, roll_i, pitch_i, yaw_i] = locations['topPrinter']
-            arm.set_position(x=x_i, y=y_i, z=z_i-distance, roll=roll_i, pitch=pitch_i, yaw=yaw_i, speed=50, wait=True)
+            arm.set_position(x=x_i, y=y_i, z=z_i - distance, roll=roll_i, pitch=pitch_i, yaw=yaw_i, speed=50, wait=True)
     else:
         print('Error with distance:', distance)
         sys.exit()
@@ -61,8 +62,7 @@ def move2target():
 
 def captureImage():
     # Read video
-    if camera is None:
-        camera = Camera()  # Runs init() function
+    camera = Camera()  # Runs init() function
     return camera.getDistance()  # rgb_array, depth_array
 
 
@@ -123,7 +123,62 @@ def reset():
     arm.clean_warn()
     arm.clean_gripper_error()
     arm.clean_error()
+    sleep(1)
     arm.reset()
+
+
+def scan():
+    from ScanFolder import sphericalScan
+    from math import degrees
+
+    arm.set_position(z=200, relative=True, speed=25, wait=True)
+    arm.set_servo_angle(servo_id=1, angle=-90, speed=25, wait=True)
+    arm.set_position(y=-200, relative=True, speed=25, wait=True)
+
+
+    points = sphericalScan.createPoints(plot=True, k=-0.8, j=0.2, radius=0.3, degreesToScan=60, numCurves=4, pointsPerCurve=10, scale=500)
+    print(len(points))
+
+    for point in points:
+        [x_i, y_i, z_i, roll_i, pitch_i, yaw_i] = point
+        x_i = int(x_i)
+        y_i = int(y_i)
+        z_i = int(z_i)
+        roll_i = int(degrees(roll_i))
+        pitch_i = int(degrees(pitch_i))
+        yaw_i = int(degrees(yaw_i))
+        print(x_i, y_i, z_i, roll_i, pitch_i, yaw_i)
+        if x_i not in range(-700, 700):
+            print('X too high')
+            continue
+        if y_i not in range(-700, 700):
+            print('Y too high')
+            continue
+        if z_i not in range(-400, 950):
+            print('Z too high')
+            continue
+        if roll_i not in range(-180, 180):
+            print('X Angle too high')
+            continue
+        if roll_i not in range(-180, 180):
+            print('Y Angle too high')
+            continue
+        if roll_i not in range(-180, 180):
+            print('Z Angle too high')
+            continue
+        else:
+            print('good')
+            arm.set_position(x=x_i, y=y_i, z=z_i, wait=True, relative=False) #, roll=roll_i, pitch=pitch_i, yaw=yaw_i, is_radian=False, speed=25, mvacc=250, wait=True)
+        sleep(1)
+
+
+def otherScan():
+    start = locations['topPrinter']
+    start[1] = start[1] + 100
+    # end = start
+    # end[1] = start[1] - 100
+    end = locations['frontPrinter']
+    arm.move_circle(start, end, percent=90, is_radian=False)
 
 
 options = {
@@ -137,8 +192,8 @@ options = {
     'grab': grab,
     'smart grab': smartGrab,
     'view object top': viewObjectTop,
-    'get front distance': getFrontDistance
-
+    'get front distance': getFrontDistance,
+    'scan': scan
 }
 
 # filename = sys.argv[2]
